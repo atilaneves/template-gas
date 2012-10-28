@@ -29,11 +29,14 @@ namespace ga {
 	const int xoverPoint = random();
 	std::cout << "Xover point is " << xoverPoint << std::endl;
 
-	Container child1(father.begin(), father.begin() + xoverPoint);
-	Container child2(mother.begin(), mother.begin() + xoverPoint);
+	Container child1(father.size());
+	Container child2(father.size());
 
-	std::copy(father.begin() + xoverPoint, father.end(), child1.begin() + xoverPoint);
-	std::copy(mother.begin() + xoverPoint, mother.end(), child2.begin() + xoverPoint);
+	std::copy(father.begin(), father.begin() + xoverPoint, child1.begin());
+	std::copy(mother.begin(), mother.begin() + xoverPoint, child2.begin());
+
+	std::copy(mother.begin() + xoverPoint, mother.end(), child1.begin() + xoverPoint);
+	std::copy(father.begin() + xoverPoint, father.end(), child2.begin() + xoverPoint);
 
 	std::cout << "Returning tuple of vectors\n";
 	return std::make_tuple(child1, child2);

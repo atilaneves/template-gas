@@ -1,8 +1,7 @@
 #include "tests.hpp"
-#include "Individual.hpp"
+#include "Algorithm.hpp"
 #include <algorithm>
 #include <iostream>
-#include <assert.h>
 
 double calcFitness(const ga::Individual<>& individual) {
     auto&& genes = individual.getGenes();
@@ -10,13 +9,13 @@ double calcFitness(const ga::Individual<>& individual) {
 }
 
 void algo() {
-    // constexpr int populationSize = 8;
-    // constexpr int genomeSize = 12;
-    // ga::Algorithm<> ga(populationSize, genomeSize);
+     // constexpr int populationSize = 8;
+     // constexpr int genomeSize = 12;
+     // ga::Algorithm<> ga(populationSize, genomeSize);
 
-    // constexpr double fitness = genomeSize; //end condition
-    // constexpr double mutate = 0.01;
-    // std::cout << "Individual is " << ga.run(fitness, calcFitness, mutate) << std::endl;
+     // constexpr double fitness = genomeSize; //end condition
+     // constexpr double mutate = 0.01;
+     // std::cout << "Individual is " << ga.run(fitness, calcFitness, mutate) << std::endl;
 }
 
 

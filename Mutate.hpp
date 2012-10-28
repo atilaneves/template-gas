@@ -2,10 +2,11 @@
 #define _MUTATE_H_
 
 #include "Random.hpp"
+#include "Individual.hpp"
 
 namespace ga {
 
-    template<class INDIVIDUAL>
+    template<class INDIVIDUAL = Individual<>>
     class Mutate {
     public:
 	typedef typename INDIVIDUAL::Container Container;

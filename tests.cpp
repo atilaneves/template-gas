@@ -2,7 +2,9 @@
 #include "Individual.hpp"
 #include "Crossover.hpp"
 #include "Tournament.hpp"
+#include "Mutate.hpp"
 #include <algorithm>
+#include <assert.h>
 
 void individuals();
 void xover();
@@ -10,8 +12,17 @@ void tournament();
 
 void asserts() {
     //individuals();
-    //xover();
-    tournament();
+    xover();
+    //tournament();
+}
+
+
+namespace {
+struct Reverse {
+    void operator()(ga::Individual<>::Container& container) const {
+	std::reverse(container.begin(), container.end());
+    }
+};
 }
 
 void individuals() {
@@ -22,12 +33,6 @@ void individuals() {
 
     const auto robber = std::move(ga::Individual<>(genomeSize)); //test moving
     std::cout << "Robber is     " << robber << std::endl;
-
-    struct Reverse {
-	void operator()(ga::Individual<>::Container& container) const {
-	    std::reverse(container.begin(), container.end());
-	}
-    };
 
     const ga::Individual<> reversed({0, 0, 0, 0, 1, 1, 1, 1}, Reverse());
 
@@ -47,8 +52,16 @@ void xover() {
     decltype(father) child1(std::get<0>(genes));
     decltype(father) child2(std::get<1>(genes));
 
-    std::cout << "Child1 is " << child1;
-    std::cout << "Child2 is " << child2;    
+    std::cout << "Child1 from genes is " << child1;
+    std::cout << "Child2 from genes is " << child2;
+
+    assert(child1.getGenes().size() == child2.getGenes().size());
+    assert(child1.getGenes().size() == father.getGenes().size());
+    assert(child1.getGenes().size() == mother.getGenes().size());
+
+    auto&& children = ga::Individual<>::createChildren(father, mother, xover, Reverse());
+    std::cout << "1st children: " << std::get<0>(children);
+    std::cout << "2nd children: " << std::get<1>(children);
 }
 
 void tournament() {
@@ -58,7 +71,7 @@ void tournament() {
     std::multimap<double, decltype(&weak)> ranked{ { 1, &weak}, {2, &medium}, { 4, &strong} };
 
     ga::Tournament<> select(3);
-    auto winners = select(ranked);
+    auto&& winners = select(ranked);
     
     std::cout << "1st winner: " << std::get<0>(winners);
     std::cout << "2nd winner: " << std::get<1>(winners);

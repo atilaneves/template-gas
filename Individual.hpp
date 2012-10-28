@@ -32,10 +32,10 @@ namespace ga {
 	}
 
 	template<class XOVER, class MUTATE>
-	static std::tuple<Individual, Individual>&& createChildren(const Individual& father,
-								   const Individual& mother,
-								   const XOVER& xover,
-								   const MUTATE& mutate);
+	static std::tuple<Individual, Individual> createChildren(const Individual& father,
+								 const Individual& mother,
+								 const XOVER& xover,
+								 const MUTATE& mutate);
 	const Container& getGenes() const { return _genes; }
 	    
     private:
@@ -58,7 +58,7 @@ namespace ga {
 
     template<typename GENE, class CONTAINER>
     template<class XOVER, class MUTATE>
-    std::tuple<Individual<GENE, CONTAINER>, Individual<GENE, CONTAINER>>&&//return value
+    std::tuple<Individual<GENE, CONTAINER>, Individual<GENE, CONTAINER>>//return value
 	Individual<GENE, CONTAINER>::createChildren(const Individual& father,
 						    const Individual& mother,
 						    const XOVER& xover,

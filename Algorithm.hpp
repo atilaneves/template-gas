@@ -46,9 +46,9 @@ namespace ga {
 	    return *std::max_element(values.begin(), values.end());
 	}
 
-	template<class FITNESS>
-	std::multimap<double, const MyIndividual*> rankPopulation(const FITNESS& fitnessFunc) const {
-	    std::multimap<double, const MyIndividual*> ranked;
+	template<class SELECT, class FITNESS>
+	typename SELECT::Rankings rankPopulation(const FITNESS& fitnessFunc) const {
+	    typename SELECT::Rankings ranked;
 	    for(const auto& ind: _population) {
 		ranked.insert(std::make_pair(fitnessFunc(ind), &ind));
 	    }
@@ -81,7 +81,7 @@ namespace ga {
 	    newPopulation.reserve(_population.size());
 
 	    while(newPopulation.size() < _population.size()) {
-		const auto ranked = rankPopulation(fitnessFunc);
+		const auto ranked = rankPopulation<SELECT>(fitnessFunc);
 		const auto parents = select(ranked);
 		auto children = MyIndividual::createChildren(std::get<0>(parents), std::get<1>(parents),
 							     xover, mutate);

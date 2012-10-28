@@ -36,8 +36,9 @@ namespace ga {
 	std::vector<Pair> participants;
 	for(unsigned i = 0; i < _numParticipants; ++i) {
 	    auto it = population.begin();
-	    //it += (std::ptrdiff_t)_random();
-	    participants.push_back(Pair(*it));	    
+	    const int offset = _random();
+	    for(int j = 0; j < offset; ++j) ++it;
+	    participants.push_back(*it);
 	}
 
 	auto it = std::max_element(participants.begin(), participants.end(),

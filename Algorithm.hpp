@@ -69,10 +69,15 @@ namespace ga {
 	    std::cout << std::endl;
 	    
 	    Population newPopulation;
+	    newPopulation.reserve(_population.size());
+
 	    while(newPopulation.size() < _population.size()) {
 		const auto ranked = rankPopulation(fitnessFunc);
 		const auto parents = select(ranked);
-		
+		auto children = MyIndividual::createChildren(std::get<0>(parents), std::get<1>(parents),
+							     xover, mutate);
+		newPopulation.push_back(std::move(std::get<0>(children)));
+		newPopulation.push_back(std::move(std::get<1>(children)));
 	    }
 	    ++i;
 	}

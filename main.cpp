@@ -8,8 +8,8 @@ double calcFitness(const ga::Individual<>& individual) {
 }
 
 int main() {
-    constexpr int populationSize = 12;
-    constexpr int genomeSize = 8;
+    constexpr int populationSize = 8;
+    constexpr int genomeSize = 12;
     ga::Algorithm<> ga(populationSize, genomeSize);
 
     constexpr double fitness = genomeSize; //end condition

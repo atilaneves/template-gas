@@ -21,7 +21,7 @@ namespace ga {
     void Mutate<INDIVIDUAL>::operator()(Container& container) const {
 	UniformIntDistribution<Gene> randomGene;
 	UniformRealDistribution<> rate;
-	for(Gene& gene: container) {
+	for(typename Container::reference gene: container) {
 	    if(rate() < _rate) {
 		gene = randomGene();
 	    }

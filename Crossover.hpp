@@ -29,11 +29,11 @@ namespace ga {
 
 	std::vector<Container> genes;
 	constexpr int numChildren = 2;
-	std::array<const Container&, 2> parents = { std::ref(father), std::ref(mother) };
+	std::array<const Container*, 2> parents{ { &father, &mother } };
 	for(int i = 0; i < numChildren; ++i) {
 	    genes[i].reserve(father.size());
-	    std::copy(parents[0].begin(), parents[0].begin() + xoverPoint, genes[i].begin());
-	    std::copy(parents[1].begin() + xoverPoint, parents[1].end(), genes[i].begin() + xoverPoint);
+	    std::copy(parents[0]->begin(), parents[0]->begin() + xoverPoint, genes[i].begin());
+	    std::copy(parents[1]->begin() + xoverPoint, parents[1]->end(), genes[i].begin() + xoverPoint);
 	    std::reverse(parents.begin(), parents.end());
 	}
 

@@ -3,6 +3,7 @@
 
 #include "Random.hpp"
 #include "Individual.hpp"
+#include <iostream>
 
 namespace ga {
 
@@ -12,7 +13,7 @@ namespace ga {
 	typedef typename INDIVIDUAL::Container Container;
 	typedef typename INDIVIDUAL::Gene Gene;
 
-	Mutate(double rate):_rate() { }
+	Mutate(double rate):_rate(rate) { }
 	void operator()(Container& container) const;
     private:
 	double _rate;

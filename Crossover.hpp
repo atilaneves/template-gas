@@ -27,7 +27,6 @@ namespace ga {
 	
 	UniformIntDistribution<> random(0, father.size() - 1);
 	const int xoverPoint = random();
-	std::cout << "Xover point is " << xoverPoint << std::endl;
 
 	Container child1(father.size());
 	Container child2(father.size());
@@ -38,7 +37,6 @@ namespace ga {
 	std::copy(mother.begin() + xoverPoint, mother.end(), child1.begin() + xoverPoint);
 	std::copy(father.begin() + xoverPoint, father.end(), child2.begin() + xoverPoint);
 
-	std::cout << "Returning tuple of vectors\n";
 	return std::make_tuple(child1, child2);
     }
 }

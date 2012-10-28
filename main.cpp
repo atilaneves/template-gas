@@ -9,17 +9,19 @@ double calcFitness(const ga::Individual<>& individual) {
 }
 
 void algo() {
-    constexpr int populationSize = 8;
+    constexpr int populationSize = 20;
     constexpr int genomeSize = 12;
     ga::Algorithm<> ga(populationSize, genomeSize);
 
     constexpr double fitness = genomeSize; //end condition
-    constexpr double mutate = 0.01;
-    std::cout << "Individual is " << ga.run(fitness, calcFitness, mutate) << std::endl;
+    constexpr double mutate = 0.05;
+    auto&& winner = ga.run(fitness, calcFitness, mutate);
+    std::cout << "Individual of fitness " << calcFitness(winner) << " is " << winner;
 }
 
 
 int main() {
-    asserts();
+    //asserts();
+    algo();
     return 0;
 }

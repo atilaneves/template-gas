@@ -14,20 +14,12 @@ namespace ga {
 	typedef GENE Gene;
 	typedef CONTAINER Container;
 	    	    
-	~Individual() { std::cout << "Individual dying\n"; }
 	explicit Individual(unsigned size);
-	Individual(Individual&& individual):_genes(std::move(individual._genes)) {
-	    std::cout << "Robbing from individual\n";
-	}
-	Individual(const Container& genes): _genes(genes) {
-	    std::cout << "Copying from genes\n";
-	}
-	Individual(Container&& genes): _genes(std::move(genes)) {
-	    std::cout << "Robbing from genes\n";
-	}
+	Individual(Individual&& individual):_genes(std::move(individual._genes)) { }
+	Individual(const Container& genes): _genes(genes) { }
+	Individual(Container&& genes): _genes(std::move(genes)) { }
 	template<class MUTATE>
 	Individual(Container&& genes, const MUTATE& mutate):_genes(std::move(genes)) {
-	    std::cout << "Mutating\n";
 	    mutate(_genes);
 	}
 
@@ -48,7 +40,6 @@ namespace ga {
 
     template<typename GENE, class CONTAINER>
     Individual<GENE, CONTAINER>::Individual(const unsigned size) {
-	std::cout << "Creating random individual\n";
 	UniformIntDistribution<GENE> random;
 	for(unsigned i = 0; i < size; ++i) {
 	    _genes.push_back(random());

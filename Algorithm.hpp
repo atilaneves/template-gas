@@ -39,6 +39,14 @@ namespace ga {
 	}
 
 	template<class FITNESS>
+	double getHighestFitness(const FITNESS& fitnessFunc) const {
+	    std::vector<double> values(_population.size());
+	    std::transform(_population.begin(), _population.end(), values.begin(),
+			   [&](const MyIndividual& i) { return fitnessFunc(i); });
+	    return *std::max_element(values.begin(), values.end());
+	}
+
+	template<class FITNESS>
 	std::multimap<double, const MyIndividual*> rankPopulation(const FITNESS& fitnessFunc) const {
 	    std::multimap<double, const MyIndividual*> ranked;
 	    for(const MyIndividual& ind: _population) {
@@ -46,6 +54,12 @@ namespace ga {
 	    }
 
 	    return std::move(ranked);
+	}
+
+	void printGeneration(int generation) const {
+	    std::cout << "Generation " << generation << std::endl;
+	    for(const MyIndividual& ind: _population) std::cout << ind;
+	    std::cout << std::endl;
 	}
     };
 
@@ -61,13 +75,9 @@ namespace ga {
     const typename Algorithm<GENE, CONTAINER>::MyIndividual& //return value
     Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
 				    const XOVER& xover, const MUTATE& mutate) {
-	const MyIndividual& fittest = getFittest(fitnessFunc);
-	int i = 0;
-	while(fitnessFunc(getFittest(fitnessFunc)) < fitness) {
-	    std::cout << "Generation " << i << std::endl;
-	    for(const MyIndividual& ind: _population) std::cout << ind;
-	    std::cout << std::endl;
-	    
+	int generation = 0;
+	while(getHighestFitness(fitnessFunc) < fitness) {
+	    printGeneration(generation);
 	    Population newPopulation;
 	    newPopulation.reserve(_population.size());
 
@@ -79,9 +89,12 @@ namespace ga {
 		newPopulation.push_back(std::move(std::get<0>(children)));
 		newPopulation.push_back(std::move(std::get<1>(children)));
 	    }
-	    ++i;
+
+	    _population = std::move(newPopulation);
+	    ++generation;
 	}
-	return fittest;
+	printGeneration(generation);
+	return getFittest(fitnessFunc);
     }
 
     template<typename GENE, class CONTAINER>

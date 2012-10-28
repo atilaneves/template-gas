@@ -34,7 +34,6 @@ namespace ga {
     template<typename INDIVIDUAL>
     const INDIVIDUAL& Tournament<INDIVIDUAL>::pickParent(const Rankings& rankings) const {
 	UniformIntDistribution<> _random(0, rankings.size() - 1);
-	typedef std::pair<double, const INDIVIDUAL&> Pair;
 	Rankings participants;
 	for(unsigned i = 0; i < _numParticipants; ++i) {
 	    auto it = rankings.begin();
@@ -43,8 +42,9 @@ namespace ga {
 	    participants.insert(std::make_pair(it->first, std::cref(it->second)));
 	}
 
+	typedef typename Rankings::value_type pair;
 	auto it = std::max_element(participants.begin(), participants.end(),
-				   [](const Pair& p1, const Pair& p2) { return p1.first < p2.first; });
+				   [](const pair& p1, const pair& p2) { return p1.first < p2.first; });
 	return it->second;
     }
     

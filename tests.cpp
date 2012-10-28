@@ -39,8 +39,16 @@ void xover() {
     std::cout << "Mother is " << mother;
         
     ga::SinglePointCrossover<ga::Individual<>> xover;
-    ga::Individual<>::Container child1, child2;
-    std::tie(child1, child2) = xover(father.getGenes(), mother.getGenes());
+    ga::Individual<>::Container child1Genes, child2Genes;
+    std::tie(child1Genes, child2Genes) = xover(father.getGenes(), mother.getGenes());
+    // std::tuple<ga::Individual<>::Container&&, ga::Individual<>::Container&&> genes = 
+    // 	xover(father.getGenes(), mother.getGenes());
+    decltype(father) child1(child1Genes);
+    decltype(father) child2(child2Genes);
+    // decltype(father) child1(std::get<0>(genes));
+    // decltype(father) child2(std::get<1>(genes));
 
+    std::cout << "Child1 is " << child1;
+    std::cout << "Child2 is " << child2;
     
 }

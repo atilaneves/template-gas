@@ -15,31 +15,28 @@ namespace ga {
 	typedef std::tuple<Container, Container> MyTuple;
 
 	SinglePointCrossover(double rate = 1.0):_rate(rate) { }
-	MyTuple&& operator()(const Container& father, const Container& mother) const;
+	MyTuple operator()(const Container& father, const Container& mother) const;
 	
     private:
 	double _rate;
     };
 
     template<class INDIVIDUAL>
-    typename SinglePointCrossover<INDIVIDUAL>::MyTuple&& //return value
+    typename SinglePointCrossover<INDIVIDUAL>::MyTuple //return value
     SinglePointCrossover<INDIVIDUAL>::operator()(const Container& father, const Container& mother) const {
 	
 	UniformIntDistribution<> random(0, father.size());
 	const int xoverPoint = random();
 	std::cout << "Xover point is " << xoverPoint << std::endl;
 
-	std::vector<Container> genes;
-	constexpr int numChildren = 2;
-	std::array<const Container*, 2> parents{ { &father, &mother } };
-	for(int i = 0; i < numChildren; ++i) {
-	    genes[i].reserve(father.size());
-	    std::copy(parents[0]->begin(), parents[0]->begin() + xoverPoint, genes[i].begin());
-	    std::copy(parents[1]->begin() + xoverPoint, parents[1]->end(), genes[i].begin() + xoverPoint);
-	    std::reverse(parents.begin(), parents.end());
-	}
+	Container child1(father.begin(), father.begin() + xoverPoint);
+	Container child2(mother.begin(), mother.begin() + xoverPoint);
 
-	return std::move(genes);
+	std::copy(father.begin() + xoverPoint, father.end(), child1.begin() + xoverPoint);
+	std::copy(mother.begin() + xoverPoint, mother.end(), child2.begin() + xoverPoint);
+
+	std::cout << "Returning tuple of vectors\n";
+	return std::make_tuple(child1, child2);
     }
 }
 

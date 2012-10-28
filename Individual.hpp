@@ -17,9 +17,14 @@ namespace ga {
 	~Individual() { std::cout << "Individual dying\n"; }
 	explicit Individual(unsigned size);
 	Individual(Individual&& individual):_genes(std::move(individual._genes)) {
-	    std::cout << "Robbing\n";
+	    std::cout << "Robbing from individual\n";
 	}
-	Individual(Container&& genes): _genes(std::move(genes)) { }
+	Individual(const Container& genes): _genes(genes) {
+	    std::cout << "Copying from genes\n";
+	}
+	Individual(Container&& genes): _genes(std::move(genes)) {
+	    std::cout << "Robbing from genes\n";
+	}
 	template<class MUTATE>
 	Individual(Container&& genes, const MUTATE& mutate):_genes(std::move(genes)) {
 	    std::cout << "Mutating\n";

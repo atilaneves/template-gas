@@ -1,6 +1,9 @@
 #include "Algorithm.hpp"
 
 int main() {
-    auto var = 4;
+    constexpr int populationSize = 12;
+    constexpr int genomeSize = 8;
+    ga::Algorithm<> ga(populationSize, genomeSize);
+    //ga.run();
     return 0;
 }

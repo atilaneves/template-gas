@@ -25,7 +25,7 @@ namespace ga {
     typename SinglePointCrossover<INDIVIDUAL>::MyTuple //return value
     SinglePointCrossover<INDIVIDUAL>::operator()(const Container& father, const Container& mother) const {
 	
-	UniformIntDistribution<> random(0, father.size());
+	UniformIntDistribution<> random(0, father.size() - 1);
 	const int xoverPoint = random();
 	std::cout << "Xover point is " << xoverPoint << std::endl;
 

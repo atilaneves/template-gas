@@ -63,7 +63,7 @@ namespace ga {
 template<typename GENE, class CONTAINER>
 std::ostream& operator<<(std::ostream &out, const ga::Individual<GENE, CONTAINER>& individual) {
     out << "    ";
-    for(GENE gene: individual.getGenes()) {
+    for(auto gene: individual.getGenes()) {
 	out << gene;
     }
     out << std::endl;

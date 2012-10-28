@@ -49,11 +49,11 @@ namespace ga {
 	template<class FITNESS>
 	std::multimap<double, const MyIndividual*> rankPopulation(const FITNESS& fitnessFunc) const {
 	    std::multimap<double, const MyIndividual*> ranked;
-	    for(const MyIndividual& ind: _population) {
+	    for(const auto& ind: _population) {
 		ranked.insert(std::make_pair(fitnessFunc(ind), &ind));
 	    }
 
-	    return std::move(ranked);
+	    return ranked;
 	}
 
 	void printGeneration(int generation) const {

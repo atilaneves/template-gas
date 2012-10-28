@@ -19,6 +19,7 @@ namespace ga {
 	Individual(Individual&& individual):_genes(std::move(individual._genes)) {
 	    std::cout << "Robbing\n";
 	}
+	Individual(Container&& genes): _genes(std::move(genes)) { }
 	template<class MUTATE>
 	Individual(Container&& genes, const MUTATE& mutate):_genes(std::move(genes)) {
 	    std::cout << "Mutating\n";
@@ -65,7 +66,7 @@ namespace ga {
 }
 
 template<typename GENE, class CONTAINER>
-std::ostream& operator<<(std::ostream &out, const ga::Individual<GENE, CONTAINER> &individual) {
+std::ostream& operator<<(std::ostream &out, const ga::Individual<GENE, CONTAINER>& individual) {
     out << "    ";
     for(GENE gene: individual.getGenes()) {
 	out << gene;
@@ -73,5 +74,6 @@ std::ostream& operator<<(std::ostream &out, const ga::Individual<GENE, CONTAINER
     out << std::endl;
     return out;
 }
+
 
 #endif

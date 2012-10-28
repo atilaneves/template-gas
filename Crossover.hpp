@@ -4,6 +4,7 @@
 #include "Random.hpp"
 #include <algorithm>
 #include <array>
+#include <iostream>
 
 namespace ga {
     template<class INDIVIDUAL>
@@ -26,6 +27,7 @@ namespace ga {
 	
 	UniformIntDistribution<> random(0, father.size());
 	const int xoverPoint = random();
+	std::cout << "Xover point is " << xoverPoint << std::endl;
 
 	std::vector<Container> genes;
 	constexpr int numChildren = 2;

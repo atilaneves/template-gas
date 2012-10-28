@@ -22,6 +22,8 @@ namespace ga {
 		 class MUTATE = Mutate<MyIndividual>>
 	MyIndividual* run(const FITNESS& fitness, const SELECT& select,
 			  const XOVER& xover, const MUTATE& mutate);
+	template<class FITNESS>
+	MyIndividual* run(const FITNESS& fitness, double mutateRate, double xoverRate = 1.0);
 
     private:
 	typedef std::vector<MyIndividual> Population;
@@ -44,6 +46,13 @@ namespace ga {
 	return nullptr;
     }
 
+    template<typename GENE, class CONTAINER>
+    template<class FITNESS>
+    typename Algorithm<GENE, CONTAINER>::MyIndividual* //return value
+    Algorithm<GENE, CONTAINER>::run(const FITNESS& fitness, double mutateRate, double xoverRate) {
+	return run(fitness, Tournament<MyIndividual>(), SinglePointCrossover<MyIndividual>(xoverRate),
+		   Mutate<MyIndividual>(mutateRate));
+    }
 
 }
 

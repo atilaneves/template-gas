@@ -18,6 +18,8 @@ namespace ga {
 	Individual(Individual&& individual):_genes(std::move(individual._genes)) { }
 	template<class XOVER = SinglePointCrossover<Individual>, class MUTATE = Mutate<Individual>>
 	Individual(const Individual& father, const Individual& mother, const XOVER& xover, const MUTATE& mutate);
+
+	const Container& getGenes() const { return _genes; }
 	    
     private:
 
@@ -25,7 +27,6 @@ namespace ga {
 	    
 	Individual(const Individual& i) = delete;
     };
-
 
     template<typename GENE, class CONTAINER>
     Individual<GENE, CONTAINER>::Individual(const unsigned size) {

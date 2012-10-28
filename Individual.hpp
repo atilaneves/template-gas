@@ -2,9 +2,8 @@
 #define _INDIVIUAL_HPP_
 
 #include "Random.hpp"
-#include "Mutate.hpp"
-#include "Crossover.hpp"
 #include <vector>
+#include <tuple>
 #include <iostream>
 
 namespace ga {
@@ -17,9 +16,14 @@ namespace ga {
 	    	    
 	Individual(unsigned size);
 	Individual(Individual&& individual):_genes(std::move(individual._genes)) { }
-	template<class XOVER = SinglePointCrossover<Individual>, class MUTATE = Mutate<Individual>>
-	Individual(const Individual& father, const Individual& mother, const XOVER& xover, const MUTATE& mutate);
+	template<class MUTATE>
+	Individual(Container&& genes, const MUTATE& mutate):_genes(genes) { mutate(_genes); }
 
+	template<class XOVER, class MUTATE>
+	static std::tuple<Individual, Individual>&& createChildren(const Individual& father,
+								   const Individual& mother,
+								   const XOVER& xover,
+								   const MUTATE& mutate);
 	const Container& getGenes() const { return _genes; }
 	    
     private:
@@ -39,11 +43,14 @@ namespace ga {
 
     template<typename GENE, class CONTAINER>
     template<class XOVER, class MUTATE>
-    Individual<GENE, CONTAINER>::Individual(const Individual& father, const Individual& mother,
-					    const XOVER& xover, const MUTATE& mutate):
-	_genes(xover(father._genes, mother._genes)) {
-	
-	mutate(_genes);
+    std::tuple<Individual<GENE, CONTAINER>, Individual<GENE, CONTAINER>>&&//return value
+	Individual<GENE, CONTAINER>::createChildren(const Individual& father,
+						    const Individual& mother,
+						    const XOVER& xover,
+						    const MUTATE& mutate) {
+	std::tuple<Container, Container> genes = xover(father._genes, mother._genes);
+	return std::forward_as_tuple(Individual(std::move(std::get<0>(genes)), mutate),
+				     Individual(std::move(std::get<1>(genes)), mutate));
     }
 }
 

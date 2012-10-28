@@ -5,7 +5,6 @@
 #include "Tournament.hpp"
 #include "Mutate.hpp"
 #include "Crossover.hpp"
-#include <iostream>
 
 namespace ga {
 
@@ -20,10 +19,11 @@ namespace ga {
 		 class SELECT = Tournament<MyIndividual>,
 		 class XOVER = SinglePointCrossover<MyIndividual>,
 		 class MUTATE = Mutate<MyIndividual>>
-	MyIndividual* run(const FITNESS& fitness, const SELECT& select,
+        MyIndividual* run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
 			  const XOVER& xover, const MUTATE& mutate);
 	template<class FITNESS>
-	MyIndividual* run(const FITNESS& fitness, double mutateRate, double xoverRate = 1.0);
+	MyIndividual* run(double fitness, const FITNESS& fitnessFunc,
+			  double mutateRate, double xoverRate = 1.0);
 
     private:
 	typedef std::vector<MyIndividual> Population;
@@ -41,7 +41,7 @@ namespace ga {
     template<typename GENE, class CONTAINER>
     template<class FITNESS, class SELECT, class XOVER, class MUTATE>
     typename Algorithm<GENE, CONTAINER>::MyIndividual* //return value
-    Algorithm<GENE, CONTAINER>::run(const FITNESS& fitness, const SELECT& select,
+    Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
 				    const XOVER& xover, const MUTATE& mutate) {
 	return nullptr;
     }
@@ -49,8 +49,10 @@ namespace ga {
     template<typename GENE, class CONTAINER>
     template<class FITNESS>
     typename Algorithm<GENE, CONTAINER>::MyIndividual* //return value
-    Algorithm<GENE, CONTAINER>::run(const FITNESS& fitness, double mutateRate, double xoverRate) {
-	return run(fitness, Tournament<MyIndividual>(), SinglePointCrossover<MyIndividual>(xoverRate),
+    Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc,
+				    double mutateRate, double xoverRate) {
+	return run(fitness, fitnessFunc, Tournament<MyIndividual>(),
+		   SinglePointCrossover<MyIndividual>(xoverRate),
 		   Mutate<MyIndividual>(mutateRate));
     }
 

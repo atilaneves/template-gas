@@ -5,6 +5,7 @@
 #include "Mutate.hpp"
 #include "Crossover.hpp"
 #include <vector>
+#include <iostream>
 
 namespace ga {
 
@@ -46,5 +47,14 @@ namespace ga {
     }
 }
 
+template<typename GENE, class CONTAINER>
+std::ostream& operator<<(std::ostream &out, const ga::Individual<GENE, CONTAINER> &individual) {
+    out << "    ";
+    for(GENE gene: individual.getGenes()) {
+	out << gene;
+    }
+    out << std::endl;
+    return out;
+}
 
 #endif

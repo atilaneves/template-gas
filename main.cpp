@@ -13,9 +13,9 @@ void algo() {
     constexpr int genomeSize = 12;
     ga::Algorithm<> ga(populationSize, genomeSize);
 
-     // constexpr double fitness = genomeSize; //end condition
-     // constexpr double mutate = 0.01;
-     // std::cout << "Individual is " << ga.run(fitness, calcFitness, mutate) << std::endl;
+    constexpr double fitness = genomeSize; //end condition
+    constexpr double mutate = 0.01;
+    std::cout << "Individual is " << ga.run(fitness, calcFitness, mutate) << std::endl;
 }
 
 

@@ -14,7 +14,7 @@ namespace ga {
     template<typename INDIVIDUAL = Individual<>>
     class Tournament {
     public:
-	typedef std::multimap<double, const INDIVIDUAL*> Rankings;
+	typedef std::multimap<double, const INDIVIDUAL&> Rankings;
 	typedef std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> ParentTuple;
 
 	Tournament(unsigned numParticipants = 2u):_numParticipants(numParticipants) { }
@@ -28,24 +28,24 @@ namespace ga {
 
     template<typename INDIVIDUAL>
     auto Tournament<INDIVIDUAL>::operator()(const Rankings& rankings) const -> ParentTuple {
-	return make_tuple(std::ref(pickParent(rankings)), std::ref(pickParent(rankings)));
+	return std::make_tuple(std::cref(pickParent(rankings)), std::cref(pickParent(rankings)));
     }
 
     template<typename INDIVIDUAL>
     const INDIVIDUAL& Tournament<INDIVIDUAL>::pickParent(const Rankings& rankings) const {
 	UniformIntDistribution<> _random(0, rankings.size() - 1);
-	typedef std::pair<double, const INDIVIDUAL*> Pair;
-	std::vector<Pair> participants;
+	typedef std::pair<double, const INDIVIDUAL&> Pair;
+	Rankings participants;
 	for(unsigned i = 0; i < _numParticipants; ++i) {
 	    auto it = rankings.begin();
 	    const int offset = _random();
 	    for(int j = 0; j < offset; ++j) ++it; //won't let me add
-	    participants.push_back(*it);
+	    participants.insert(std::make_pair(it->first, std::cref(it->second)));
 	}
 
 	auto it = std::max_element(participants.begin(), participants.end(),
 				   [](const Pair& p1, const Pair& p2) { return p1.first < p2.first; });
-	return *it->second;
+	return it->second;
     }
     
 }

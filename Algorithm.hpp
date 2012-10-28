@@ -50,7 +50,7 @@ namespace ga {
 	typename SELECT::Rankings rankPopulation(const FITNESS& fitnessFunc) const {
 	    typename SELECT::Rankings ranked;
 	    for(const auto& ind: _population) {
-		ranked.insert(std::make_pair(fitnessFunc(ind), &ind));
+		ranked.insert(std::make_pair(fitnessFunc(ind), std::cref(ind)));
 	    }
 
 	    return ranked;

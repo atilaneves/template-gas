@@ -68,7 +68,7 @@ void tournament() {
     const ga::Individual<> weak({0, 0, 0, 1});
     decltype(weak) strong({1, 1, 1, 1});
     decltype(weak) medium({1, 0, 1, 0});
-    std::multimap<double, decltype(&weak)> ranked{ { 1, &weak}, {2, &medium}, { 4, &strong} };
+    ga::Tournament<>::Rankings ranked{ { 1, std::cref(weak)}, {2, std::cref(medium)}, {4, std::cref(strong)} };
 
     ga::Tournament<> select(3);
     auto&& winners = select(ranked);

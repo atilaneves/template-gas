@@ -22,9 +22,8 @@ namespace ga {
     };
 
     template<class INDIVIDUAL>
-    typename SinglePointCrossover<INDIVIDUAL>::MyTuple //return value
-    SinglePointCrossover<INDIVIDUAL>::operator()(const Container& father, const Container& mother) const {
-	
+    auto SinglePointCrossover<INDIVIDUAL>::operator()(const Container& father,
+						      const Container& mother) const -> MyTuple {
 	UniformIntDistribution<> random(0, father.size() - 1);
 	const int xoverPoint = random();
 

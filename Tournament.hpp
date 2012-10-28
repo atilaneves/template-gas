@@ -15,6 +15,7 @@ namespace ga {
     class Tournament {
     public:
 	typedef std::multimap<double, const INDIVIDUAL*> Rankings;
+	typedef std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> ParentTuple;
 
 	Tournament(unsigned numParticipants = 2u):_numParticipants(numParticipants) { }
 	std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> operator()(const Rankings& rankings) const;
@@ -26,8 +27,7 @@ namespace ga {
     };
 
     template<typename INDIVIDUAL>
-    std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> //return value
-    Tournament<INDIVIDUAL>::operator()(const Rankings& rankings) const {
+    auto Tournament<INDIVIDUAL>::operator()(const Rankings& rankings) const -> ParentTuple {
 	return make_tuple(std::ref(pickParent(rankings)), std::ref(pickParent(rankings)));
     }
 

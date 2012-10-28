@@ -13,6 +13,7 @@ namespace ga {
     public:
 	typedef GENE Gene;
 	typedef CONTAINER Container;
+	typedef std::tuple<Individual, Individual> ChildrenTuple;
 	    	    
 	explicit Individual(unsigned size);
 	Individual(Individual&& individual):_genes(std::move(individual._genes)) { }
@@ -24,10 +25,8 @@ namespace ga {
 	}
 
 	template<class XOVER, class MUTATE>
-	static std::tuple<Individual, Individual> createChildren(const Individual& father,
-								 const Individual& mother,
-								 const XOVER& xover,
-								 const MUTATE& mutate);
+	static ChildrenTuple createChildren(const Individual& father, const Individual& mother,
+					    const XOVER& xover, const MUTATE& mutate);
 	const Container& getGenes() const { return _genes; }
 	    
     private:
@@ -48,11 +47,10 @@ namespace ga {
 
     template<typename GENE, class CONTAINER>
     template<class XOVER, class MUTATE>
-    std::tuple<Individual<GENE, CONTAINER>, Individual<GENE, CONTAINER>>//return value
-	Individual<GENE, CONTAINER>::createChildren(const Individual& father,
-						    const Individual& mother,
-						    const XOVER& xover,
-						    const MUTATE& mutate) {
+    auto Individual<GENE, CONTAINER>::createChildren(const Individual& father,
+						     const Individual& mother,
+						     const XOVER& xover,
+						     const MUTATE& mutate) -> ChildrenTuple{
 	Container child1, child2;
 	std::tie(child1, child2) = xover(father._genes, mother._genes);
 	return std::forward_as_tuple(Individual(std::move(child1), mutate),

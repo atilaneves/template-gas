@@ -72,9 +72,8 @@ namespace ga {
 
     template<typename GENE, class CONTAINER>
     template<class FITNESS, class SELECT, class XOVER, class MUTATE>
-    const typename Algorithm<GENE, CONTAINER>::MyIndividual& //return value
-    Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
-				    const XOVER& xover, const MUTATE& mutate) {
+    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
+					 const XOVER& xover, const MUTATE& mutate) -> const MyIndividual& {
 	int generation = 0;
 	while(getHighestFitness(fitnessFunc) < fitness) {
 	    printGeneration(generation);
@@ -99,9 +98,8 @@ namespace ga {
 
     template<typename GENE, class CONTAINER>
     template<class FITNESS>
-    const typename Algorithm<GENE, CONTAINER>::MyIndividual& //return value
-    Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc,
-				    double mutateRate, double xoverRate) {
+    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc,
+					 double mutateRate, double xoverRate) -> const MyIndividual& {
 	return run(fitness, fitnessFunc, Tournament<MyIndividual>(),
 		   SinglePointCrossover<MyIndividual>(xoverRate),
 		   Mutate<MyIndividual>(mutateRate));

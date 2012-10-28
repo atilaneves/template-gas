@@ -44,7 +44,6 @@ namespace ga {
 	    
 	Individual() = delete;
 	Individual(const Individual& i) = delete;
-	Individual& operator=(const Individual& i) = delete;
     };
 
     template<typename GENE, class CONTAINER>

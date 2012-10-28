@@ -1,14 +1,17 @@
 #include "tests.hpp"
 #include "Individual.hpp"
 #include "Crossover.hpp"
+#include "Tournament.hpp"
 #include <algorithm>
 
 void individuals();
 void xover();
+void tournament();
 
 void asserts() {
     //individuals();
-    xover();
+    //xover();
+    tournament();
 }
 
 void individuals() {
@@ -45,6 +48,18 @@ void xover() {
     decltype(father) child2(std::get<1>(genes));
 
     std::cout << "Child1 is " << child1;
-    std::cout << "Child2 is " << child2;
+    std::cout << "Child2 is " << child2;    
+}
+
+void tournament() {
+    const ga::Individual<> weak({0, 0, 0, 1});
+    decltype(weak) strong({1, 1, 1, 1});
+    decltype(weak) medium({1, 0, 1, 0});
+    std::multimap<double, decltype(&weak)> ranked{ { 1, &weak}, {2, &medium}, { 4, &strong} };
+
+    ga::Tournament<> select(3);
+    auto winners = select(ranked);
     
+    std::cout << "1st winner: " << std::get<0>(winners);
+    std::cout << "2nd winner: " << std::get<1>(winners);
 }

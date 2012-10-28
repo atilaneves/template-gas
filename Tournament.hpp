@@ -7,37 +7,39 @@
 #include <map>
 #include <algorithm>
 
+#include "Individual.hpp"
+
 namespace ga {
 
-    template<typename INDIVIDUAL>
+    template<typename INDIVIDUAL = Individual<>>
     class Tournament {
     public:
-	typedef std::multimap<double, const INDIVIDUAL*> Population;
+	typedef std::multimap<double, const INDIVIDUAL*> Rankings;
 
 	Tournament(unsigned numParticipants = 2u):_numParticipants(numParticipants) { }
-	std::tuple<const INDIVIDUAL&, const INDIVIDUAL&>&& operator()(const Population& population) const;
+	std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> operator()(const Rankings& rankings) const;
 
     private:
 
 	unsigned _numParticipants;
-	const INDIVIDUAL& pickParent(const Population& population) const;
+	const INDIVIDUAL& pickParent(const Rankings& rankings) const;
     };
 
     template<typename INDIVIDUAL>
-    std::tuple<const INDIVIDUAL&, const INDIVIDUAL&>&& //return value
-    Tournament<INDIVIDUAL>::operator()(const Population& population) const {
-	return make_tuple(std::ref(pickParent(population)), std::ref(pickParent(population)));
+    std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> //return value
+    Tournament<INDIVIDUAL>::operator()(const Rankings& rankings) const {
+	return make_tuple(std::ref(pickParent(rankings)), std::ref(pickParent(rankings)));
     }
 
     template<typename INDIVIDUAL>
-    const INDIVIDUAL& Tournament<INDIVIDUAL>::pickParent(const Population& population) const {
-	UniformIntDistribution<> _random(0, population.size() - 1);
+    const INDIVIDUAL& Tournament<INDIVIDUAL>::pickParent(const Rankings& rankings) const {
+	UniformIntDistribution<> _random(0, rankings.size() - 1);
 	typedef std::pair<double, const INDIVIDUAL*> Pair;
 	std::vector<Pair> participants;
 	for(unsigned i = 0; i < _numParticipants; ++i) {
-	    auto it = population.begin();
+	    auto it = rankings.begin();
 	    const int offset = _random();
-	    for(int j = 0; j < offset; ++j) ++it;
+	    for(int j = 0; j < offset; ++j) ++it; //won't let me add
 	    participants.push_back(*it);
 	}
 

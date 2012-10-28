@@ -14,10 +14,16 @@ namespace ga {
 	typedef GENE Gene;
 	typedef CONTAINER Container;
 	    	    
-	Individual(unsigned size);
-	Individual(Individual&& individual):_genes(std::move(individual._genes)) { }
+	~Individual() { std::cout << "Individual dying\n"; }
+	explicit Individual(unsigned size);
+	Individual(Individual&& individual):_genes(std::move(individual._genes)) {
+	    std::cout << "Robbing\n";
+	}
 	template<class MUTATE>
-	Individual(Container&& genes, const MUTATE& mutate):_genes(genes) { mutate(_genes); }
+	Individual(Container&& genes, const MUTATE& mutate):_genes(std::move(genes)) {
+	    std::cout << "Mutating\n";
+	    mutate(_genes);
+	}
 
 	template<class XOVER, class MUTATE>
 	static std::tuple<Individual, Individual>&& createChildren(const Individual& father,
@@ -30,11 +36,14 @@ namespace ga {
 
 	Container _genes;
 	    
+	Individual() = delete;
 	Individual(const Individual& i) = delete;
+	Individual& operator=(const Individual& i) = delete;
     };
 
     template<typename GENE, class CONTAINER>
     Individual<GENE, CONTAINER>::Individual(const unsigned size) {
+	std::cout << "Creating random individual\n";
 	UniformIntDistribution<GENE> random;
 	for(unsigned i = 0; i < size; ++i) {
 	    _genes.push_back(random());
@@ -48,9 +57,10 @@ namespace ga {
 						    const Individual& mother,
 						    const XOVER& xover,
 						    const MUTATE& mutate) {
-	std::tuple<Container, Container> genes = xover(father._genes, mother._genes);
-	return std::forward_as_tuple(Individual(std::move(std::get<0>(genes)), mutate),
-				     Individual(std::move(std::get<1>(genes)), mutate));
+	Container child1, child2;
+	std::tie(child1, child2) = xover(father._genes, mother._genes);
+	return std::forward_as_tuple(Individual(std::move(child1), mutate),
+				     Individual(std::move(child2), mutate));
     }
 }
 

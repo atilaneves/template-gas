@@ -2,20 +2,14 @@
 #define _RANDOM_H_
 
 #include <random>
-#include <time.h>
+#include <iostream>
 
 namespace ga {
 
     class Random {
     public:
 
-	static std::mt19937& getGenerator() { 
-	    static bool init = false;
-	    if(!init) {
-		_gen.seed(time(NULL));
-	    }
-	    return _gen;
-	}
+	static std::mt19937& getGenerator();
     private:
 	static std::mt19937 _gen;
     };
@@ -48,9 +42,6 @@ namespace ga {
     private:
 	std::uniform_real_distribution<T> _distribution;
     };
-
-
-    std::mt19937 Random::_gen;
 }
 
 #endif

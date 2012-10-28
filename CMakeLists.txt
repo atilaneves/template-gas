@@ -11,8 +11,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 message("Build type is ${CMAKE_BUILD_TYPE}")
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall --pedantic --std=c++0x")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall --pedantic --std=c++0x")
 
 file(GLOB SRCS *.cpp)
 include_directories(.)

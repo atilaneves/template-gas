@@ -14,7 +14,7 @@ namespace ga {
 	typedef std::tuple<Container, Container> MyTuple;
 
 	SinglePointCrossover(double rate = 1.0):_rate(rate) { }
-	MyTuple&& xover(const Container& father, const Container& mother);
+	MyTuple&& operator()(const Container& father, const Container& mother) const;
 	
     private:
 	double _rate;
@@ -22,7 +22,7 @@ namespace ga {
 
     template<class INDIVIDUAL>
     typename SinglePointCrossover<INDIVIDUAL>::MyTuple&& //return value
-    SinglePointCrossover<INDIVIDUAL>::xover(const Container& father, const Container& mother) {
+    SinglePointCrossover<INDIVIDUAL>::operator()(const Container& father, const Container& mother) const {
 	
 	UniformIntDistribution<> random(0, father.size());
 	const int xoverPoint = random();

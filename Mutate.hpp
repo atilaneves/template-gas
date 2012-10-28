@@ -12,13 +12,13 @@ namespace ga {
 	typedef typename INDIVIDUAL::Gene Gene;
 
 	Mutate(double rate):_rate() { }
-	void mutate(Container& container);
+	void operator()(Container& container) const;
     private:
 	double _rate;
     };
 
     template<class INDIVIDUAL>
-    void Mutate<INDIVIDUAL>::mutate(Container& container) {
+    void Mutate<INDIVIDUAL>::operator()(Container& container) const {
 	UniformIntDistribution<Gene> randomGene;
 	UniformRealDistribution<> rate;
 	for(Gene& gene: container) {

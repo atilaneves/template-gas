@@ -5,6 +5,7 @@
 #include "Tournament.hpp"
 #include "Mutate.hpp"
 #include "Crossover.hpp"
+#include <iostream>
 
 namespace ga {
 
@@ -36,6 +37,16 @@ namespace ga {
 				     [&](const MyIndividual& i1, const MyIndividual& i2) {
 					 return fitnessFunc(i1) < fitnessFunc(i2); });
 	}
+
+	template<class FITNESS>
+	std::multimap<double, const MyIndividual*> rankPopulation(const FITNESS& fitnessFunc) const {
+	    std::multimap<double, const MyIndividual*> ranked;
+	    for(const MyIndividual& ind: _population) {
+		ranked.insert(std::make_pair(fitnessFunc(ind), &ind));
+	    }
+
+	    return std::move(ranked);
+	}
     };
 
     template<typename GENE, class CONTAINER>
@@ -51,11 +62,19 @@ namespace ga {
     Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
 				    const XOVER& xover, const MUTATE& mutate) {
 	const MyIndividual& fittest = getFittest(fitnessFunc);
+	int i = 0;
 	while(fitnessFunc(getFittest(fitnessFunc)) < fitness) {
+	    std::cout << "Generation " << i << std::endl;
+	    for(const MyIndividual& ind: _population) std::cout << ind;
+	    std::cout << std::endl;
+	    
 	    Population newPopulation;
 	    while(newPopulation.size() < _population.size()) {
+		const auto ranked = rankPopulation(fitnessFunc);
+		const auto parents = select(ranked);
 		
 	    }
+	    ++i;
 	}
 	return fittest;
     }

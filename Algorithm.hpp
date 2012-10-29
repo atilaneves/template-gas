@@ -30,7 +30,7 @@ namespace ga {
 
         template<class FITNESS>
         const MyIndividual& getFittest(const FITNESS& fitnessFunc) const {
-            return *std::max_element(_population.begin(), _population.end(),
+            return *std::max_element(_population.cbegin(), _population.cend(),
                                      [&](const MyIndividual& i1, const MyIndividual& i2) {
                                          return fitnessFunc(i1) < fitnessFunc(i2); });
         }
@@ -38,9 +38,9 @@ namespace ga {
         template<class FITNESS>
         double getHighestFitness(const FITNESS& fitnessFunc) const {
             std::vector<double> values(_population.size());
-            std::transform(_population.begin(), _population.end(), values.begin(),
+            std::transform(_population.cbegin(), _population.cend(), values.begin(),
                            [&](const MyIndividual& i) { return fitnessFunc(i); });
-            return *std::max_element(values.begin(), values.end());
+            return *std::max_element(values.cbegin(), values.cend());
         }
 
         template<class SELECT, class FITNESS>

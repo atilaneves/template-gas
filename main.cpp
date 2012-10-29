@@ -5,7 +5,7 @@
 
 double calcFitness(const ga::Individual<>& individual) {
     auto&& genes = individual.getGenes();
-    return std::count(genes.begin(), genes.end(), true);
+    return std::count(genes.cbegin(), genes.cend(), true);
 }
 
 void algo() {

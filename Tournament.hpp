@@ -36,14 +36,14 @@ namespace ga {
         UniformIntDistribution<> _random(0, rankings.size() - 1);
         Rankings participants;
         for(unsigned i = 0; i < _numParticipants; ++i) {
-            auto it = rankings.begin();
+            auto it = rankings.cbegin();
             const int offset = _random();
             for(int j = 0; j < offset; ++j) ++it; //won't let me add
             participants.insert(std::make_pair(it->first, std::cref(it->second)));
         }
 
         typedef typename Rankings::value_type pair;
-        auto it = std::max_element(participants.begin(), participants.end(),
+        auto it = std::max_element(participants.cbegin(), participants.cend(),
                                    [](const pair& p1, const pair& p2) { return p1.first < p2.first; });
         return it->second;
     }

@@ -50,7 +50,7 @@ namespace ga {
     auto Individual<GENE, CONTAINER>::createChildren(const Individual& father,
                                                      const Individual& mother,
                                                      const XOVER& xover,
-                                                     const MUTATE& mutate) -> ChildrenTuple{
+                                                     const MUTATE& mutate) -> ChildrenTuple {
         Container child1, child2;
         std::tie(child1, child2) = xover(father._genes, mother._genes);
         return std::forward_as_tuple(Individual(std::move(child1), mutate),

@@ -16,10 +16,7 @@ namespace ga {
         
         Algorithm(unsigned populationSize, unsigned genomeSize);
         
-        template<class FITNESS,
-                 class SELECT = Tournament<MyIndividual>,
-                 class XOVER = SinglePointCrossover<MyIndividual>,
-                 class MUTATE = Mutate<MyIndividual>>
+        template<class FITNESS, class SELECT, class XOVER, class MUTATE>
             const MyIndividual& run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
                                     const XOVER& xover, const MUTATE& mutate);
         template<class FITNESS>

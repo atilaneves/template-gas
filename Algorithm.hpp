@@ -4,7 +4,7 @@
 #include "Individual.hpp"
 #include "Tournament.hpp"
 #include "Mutate.hpp"
-#include "Crossover.hpp"
+#include "SinglePointCrossover.hpp"
 #include <iostream>
 
 namespace ga {

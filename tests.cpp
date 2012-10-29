@@ -1,6 +1,6 @@
 #include "tests.hpp"
 #include "Individual.hpp"
-#include "Crossover.hpp"
+#include "SinglePointCrossover.hpp"
 #include "Tournament.hpp"
 #include "Mutate.hpp"
 #include <algorithm>

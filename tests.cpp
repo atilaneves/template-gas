@@ -18,11 +18,11 @@ void asserts() {
 
 
 namespace {
-struct Reverse {
-    void operator()(ga::Individual<>::Container& container) const {
-	std::reverse(container.begin(), container.end());
-    }
-};
+    struct Reverse {
+        void operator()(ga::Individual<>::Container& container) const {
+            std::reverse(container.begin(), container.end());
+        }
+    };
 }
 
 void individuals() {

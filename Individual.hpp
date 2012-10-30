@@ -23,7 +23,7 @@ namespace ga {
         Individual(const Container& genes): _genes(genes) { }
         Individual(Container&& genes): _genes(std::move(genes)) { }
         Individual(Container&& genes, const MutateFunc& mutate):
-            _genes(std::move(genes)) {
+            _genes(std::move(genes)) { //no delegating constructors in gcc 4.6
             mutate(_genes);
         }
 

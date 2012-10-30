@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <iostream>
+#include <functional>
 
 namespace ga {
 
@@ -14,27 +15,24 @@ namespace ga {
         typedef GENE Gene;
         typedef CONTAINER Container;
         typedef std::tuple<Individual, Individual> ChildrenTuple;
+        typedef std::function<void(Container&)> MutateFunc;
                 
-        explicit Individual(unsigned size);
-        Individual(Individual&& individual):_genes(std::move(individual._genes)) { }
+        Individual(unsigned size);        
         Individual(const Container& genes): _genes(genes) { }
         Individual(Container&& genes): _genes(std::move(genes)) { }
-        template<class MUTATE>
-        Individual(Container&& genes, const MUTATE& mutate):_genes(std::move(genes)) {
+        Individual(Container&& genes, const MutateFunc& mutate):
+            _genes(std::move(genes)) {
             mutate(_genes);
         }
 
-        template<class XOVER, class MUTATE>
+        template<class XOVER>
         static ChildrenTuple createChildren(const Individual& father, const Individual& mother,
-                                            const XOVER& xover, const MUTATE& mutate);
+                                            const XOVER& xover, const MutateFunc& mutate);
         const Container& getGenes() const { return _genes; }
         
     private:
 
         Container _genes;
-        
-        Individual() = delete;
-        Individual(const Individual& i) = delete;
     };
 
     template<typename GENE, class CONTAINER>
@@ -46,11 +44,11 @@ namespace ga {
     }
 
     template<typename GENE, class CONTAINER>
-    template<class XOVER, class MUTATE>
+    template<class XOVER>
     auto Individual<GENE, CONTAINER>::createChildren(const Individual& father,
                                                      const Individual& mother,
                                                      const XOVER& xover,
-                                                     const MUTATE& mutate) -> ChildrenTuple {
+                                                     const MutateFunc& mutate) -> ChildrenTuple {
         Container child1, child2;
         std::tie(child1, child2) = xover(father._genes, mother._genes);
         return std::forward_as_tuple(Individual(std::move(child1), mutate),

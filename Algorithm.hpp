@@ -15,12 +15,13 @@ namespace ga {
     public:
         typedef Individual<GENE, CONTAINER> MyIndividual;
         typedef std::function<double(const MyIndividual&)> FitnessFunc;
+        typedef typename MyIndividual::MutateFunc MutateFunc;
         
         Algorithm(unsigned populationSize, unsigned genomeSize);
         
-        template<class SELECT, class XOVER, class MUTATE>
+        template<class SELECT, class XOVER>
         const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc, const SELECT& select,
-                                const XOVER& xover, const MUTATE& mutate);
+                                const XOVER& xover, const MutateFunc& mutate);
         const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc,
                                 double mutateRate, double xoverRate = 1.0);
         
@@ -67,9 +68,9 @@ namespace ga {
     }
 
     template<typename GENE, class CONTAINER>
-    template<class SELECT, class XOVER, class MUTATE>
+    template<class SELECT, class XOVER>
     auto Algorithm<GENE, CONTAINER>::run(double fitness, const FitnessFunc& fitnessFunc, const SELECT& select,
-                                         const XOVER& xover, const MUTATE& mutate) -> const MyIndividual& {
+                                         const XOVER& xover, const MutateFunc& mutate) -> const MyIndividual& {
         int generation = 0;
         while(getHighestFitness(fitnessFunc) < fitness) {
             printGeneration(generation);

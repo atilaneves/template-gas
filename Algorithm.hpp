@@ -2,11 +2,12 @@
 #define _ALGORITHM_H_
 
 #include "Individual.hpp"
-#include "Tournament.hpp"
 #include "Mutate.hpp"
 #include "SinglePointCrossover.hpp"
+#include "Tournament.hpp"
 #include <functional>
 #include <iostream>
+#include <map>
 
 namespace ga {
 
@@ -17,11 +18,13 @@ namespace ga {
         typedef std::function<double(const MyIndividual&)> FitnessFunc;
         typedef typename MyIndividual::MutateFunc MutateFunc;
         typedef typename MyIndividual::XoverFunc XoverFunc;
+        typedef typename SelectParents<MyIndividual>::Rankings Rankings;
+        typedef typename SelectParents<MyIndividual>::ParentTuple ParentTuple;
+        typedef typename SelectParents<MyIndividual>::SelectFunc SelectFunc;
         
         Algorithm(unsigned populationSize, unsigned genomeSize);
         
-        template<class SELECT>
-        const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc, const SELECT& select,
+        const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc, const SelectFunc& select,
                                 const XoverFunc& xover, const MutateFunc& mutate);
         const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc,
                                 double mutateRate, double xoverRate = 1.0);
@@ -44,9 +47,8 @@ namespace ga {
             return *std::max_element(values.cbegin(), values.cend());
         }
 
-        template<class SELECT>
-        typename SELECT::Rankings rankPopulation(const FitnessFunc& fitnessFunc) const {
-            typename SELECT::Rankings ranked;
+        Rankings rankPopulation(const FitnessFunc& fitnessFunc) const {
+            Rankings ranked;
             for(const auto& ind: _population) {
                 ranked.insert(std::make_pair(fitnessFunc(ind), std::cref(ind)));
             }
@@ -69,8 +71,7 @@ namespace ga {
     }
 
     template<typename GENE, class CONTAINER>
-    template<class SELECT>
-    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FitnessFunc& fitnessFunc, const SELECT& select,
+    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FitnessFunc& fitnessFunc, const SelectFunc& select,
                                          const XoverFunc& xover, const MutateFunc& mutate) -> const MyIndividual& {
         int generation = 0;
         while(getHighestFitness(fitnessFunc) < fitness) {
@@ -79,7 +80,7 @@ namespace ga {
             newPopulation.reserve(_population.size());
 
             while(newPopulation.size() < _population.size()) {
-                const auto ranked = rankPopulation<SELECT>(fitnessFunc);
+                const auto ranked = rankPopulation(fitnessFunc);
                 const auto parents = select(ranked);
                 auto children = MyIndividual::createChildren(std::get<0>(parents), std::get<1>(parents),
                                                              xover, mutate);

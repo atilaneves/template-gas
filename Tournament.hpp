@@ -1,21 +1,18 @@
 #ifndef _TOURNAMENT_H_
 #define _TOURNAMENT_H_
 
-#include "Individual.hpp"
 #include "Random.hpp"
-#include <tuple>
-#include <map>
+#include "SelectParents.hpp"
 #include <algorithm>
-
-#include "Individual.hpp"
 
 namespace ga {
 
     template<typename INDIVIDUAL = Individual<>>
     class Tournament {
     public:
-        typedef std::multimap<double, const INDIVIDUAL&> Rankings;
-        typedef std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> ParentTuple;
+
+        typedef typename SelectParents<INDIVIDUAL>::Rankings Rankings;
+        typedef typename SelectParents<INDIVIDUAL>::ParentTuple ParentTuple;
 
         Tournament(unsigned numParticipants = 2u):_numParticipants(numParticipants) { }
         ParentTuple operator()(const Rankings& rankings) const;

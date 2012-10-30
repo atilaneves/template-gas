@@ -12,7 +12,7 @@ namespace ga {
     public:
         typedef typename INDIVIDUAL::Container Container;
         typedef typename INDIVIDUAL::Gene Gene;
-        typedef std::tuple<Container, Container> MyTuple;
+        typedef typename INDIVIDUAL::ContainerTuple MyTuple;
 
         SinglePointCrossover(double rate = 1.0):_rate(rate) { }
         MyTuple operator()(const Container& father, const Container& mother) const;

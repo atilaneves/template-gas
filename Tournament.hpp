@@ -18,7 +18,7 @@ namespace ga {
         typedef std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> ParentTuple;
 
         Tournament(unsigned numParticipants = 2u):_numParticipants(numParticipants) { }
-        std::tuple<const INDIVIDUAL&, const INDIVIDUAL&> operator()(const Rankings& rankings) const;
+        ParentTuple operator()(const Rankings& rankings) const;
 
     private:
 

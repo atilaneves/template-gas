@@ -2,7 +2,6 @@
 #define _RANDOM_H_
 
 #include <random>
-#include <iostream>
 
 namespace ga {
 

@@ -3,7 +3,6 @@
 
 #include "Random.hpp"
 #include "Individual.hpp"
-#include <iostream>
 
 namespace ga {
 

@@ -4,7 +4,6 @@
 #include "Random.hpp"
 #include <algorithm>
 #include <array>
-#include <iostream>
 
 namespace ga {
     template<class INDIVIDUAL>

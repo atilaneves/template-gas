@@ -11,7 +11,6 @@ namespace ga {
     class SinglePointCrossover {
     public:
         typedef typename INDIVIDUAL::Container Container;
-        typedef typename INDIVIDUAL::Gene Gene;
         typedef typename INDIVIDUAL::ContainerTuple MyTuple;
 
         SinglePointCrossover(double rate = 1.0):_rate(rate) { }

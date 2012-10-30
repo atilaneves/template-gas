@@ -5,6 +5,7 @@
 #include "Tournament.hpp"
 #include "Mutate.hpp"
 #include "SinglePointCrossover.hpp"
+#include <functional>
 #include <iostream>
 
 namespace ga {
@@ -13,14 +14,14 @@ namespace ga {
     class Algorithm {
     public:
         typedef Individual<GENE, CONTAINER> MyIndividual;
+        typedef std::function<double(const MyIndividual&)> FitnessFunc;
         
         Algorithm(unsigned populationSize, unsigned genomeSize);
         
-        template<class FITNESS, class SELECT, class XOVER, class MUTATE>
-            const MyIndividual& run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
-                                    const XOVER& xover, const MUTATE& mutate);
-        template<class FITNESS>
-        const MyIndividual& run(double fitness, const FITNESS& fitnessFunc,
+        template<class SELECT, class XOVER, class MUTATE>
+        const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc, const SELECT& select,
+                                const XOVER& xover, const MUTATE& mutate);
+        const MyIndividual& run(double fitness, const FitnessFunc& fitnessFunc,
                                 double mutateRate, double xoverRate = 1.0);
         
     private:
@@ -28,23 +29,21 @@ namespace ga {
 
         Population _population;
 
-        template<class FITNESS>
-        const MyIndividual& getFittest(const FITNESS& fitnessFunc) const {
+        const MyIndividual& getFittest(const FitnessFunc& fitnessFunc) const {
             return *std::max_element(_population.cbegin(), _population.cend(),
                                      [&](const MyIndividual& i1, const MyIndividual& i2) {
                                          return fitnessFunc(i1) < fitnessFunc(i2); });
         }
 
-        template<class FITNESS>
-        double getHighestFitness(const FITNESS& fitnessFunc) const {
+        double getHighestFitness(const FitnessFunc& fitnessFunc) const {
             std::vector<double> values(_population.size());
             std::transform(_population.cbegin(), _population.cend(), values.begin(),
                            [&](const MyIndividual& i) { return fitnessFunc(i); });
             return *std::max_element(values.cbegin(), values.cend());
         }
 
-        template<class SELECT, class FITNESS>
-        typename SELECT::Rankings rankPopulation(const FITNESS& fitnessFunc) const {
+        template<class SELECT>
+        typename SELECT::Rankings rankPopulation(const FitnessFunc& fitnessFunc) const {
             typename SELECT::Rankings ranked;
             for(const auto& ind: _population) {
                 ranked.insert(std::make_pair(fitnessFunc(ind), std::cref(ind)));
@@ -68,8 +67,8 @@ namespace ga {
     }
 
     template<typename GENE, class CONTAINER>
-    template<class FITNESS, class SELECT, class XOVER, class MUTATE>
-    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc, const SELECT& select,
+    template<class SELECT, class XOVER, class MUTATE>
+    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FitnessFunc& fitnessFunc, const SELECT& select,
                                          const XOVER& xover, const MUTATE& mutate) -> const MyIndividual& {
         int generation = 0;
         while(getHighestFitness(fitnessFunc) < fitness) {
@@ -94,8 +93,7 @@ namespace ga {
     }
 
     template<typename GENE, class CONTAINER>
-    template<class FITNESS>
-    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FITNESS& fitnessFunc,
+    auto Algorithm<GENE, CONTAINER>::run(double fitness, const FitnessFunc& fitnessFunc,
                                          double mutateRate, double xoverRate) -> const MyIndividual& {
         return run(fitness, fitnessFunc, Tournament<MyIndividual>(),
                    SinglePointCrossover<MyIndividual>(xoverRate),

@@ -15,7 +15,7 @@ void algo() {
 
     constexpr double fitness = genomeSize; //end condition
     constexpr double mutate = 0.05;
-    auto& winner = geneticAlgo.run(fitness, calcFitness, mutate);
+    const auto& winner = geneticAlgo.run(fitness, calcFitness, mutate);
     std::cout << "Individual of fitness " << calcFitness(winner) << " is " << winner;
 }
 

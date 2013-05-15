@@ -10,10 +10,10 @@
 #include <map>
 
 namespace ga {
+
 template<class INDIVIDUAL = Individual<>>
     class Algorithm {
     public:
-        typedef std::function<double(const INDIVIDUAL&)> FitnessFunc;
         typedef typename INDIVIDUAL::MutateFunc MutateFunc;
         typedef typename INDIVIDUAL::XoverFunc XoverFunc;
         typedef typename SelectParents<INDIVIDUAL>::Rankings Rankings;
@@ -22,9 +22,11 @@ template<class INDIVIDUAL = Individual<>>
         
         Algorithm(unsigned populationSize, unsigned genomeSize);
         
-        const INDIVIDUAL& run(double fitness, const FitnessFunc& fitnessFunc, const SelectFunc& select,
+        template<typename F>
+        const INDIVIDUAL& run(double fitness, const F& fitnessFunc, const SelectFunc& select,
                               const XoverFunc& xover, const MutateFunc& mutate);
-        const INDIVIDUAL& run(double fitness, const FitnessFunc& fitnessFunc,
+        template<typename F>
+        const INDIVIDUAL& run(double fitness, const F& fitnessFunc,
                               double mutateRate, double xoverRate = 1.0);
         
     private:
@@ -32,20 +34,23 @@ template<class INDIVIDUAL = Individual<>>
 
         Population _population;
 
-        const INDIVIDUAL& getFittest(const FitnessFunc& fitnessFunc) const {
+        template<typename F>
+        const INDIVIDUAL& getFittest(const F& fitnessFunc) const {
             return *std::max_element(_population.cbegin(), _population.cend(),
                                      [&](const INDIVIDUAL& i1, const INDIVIDUAL& i2) {
                                          return fitnessFunc(i1) < fitnessFunc(i2); });
         }
 
-        double getHighestFitness(const FitnessFunc& fitnessFunc) const {
+        template<typename F>
+        double getHighestFitness(const F& fitnessFunc) const {
             std::vector<double> values(_population.size());
             std::transform(_population.cbegin(), _population.cend(), values.begin(),
                            [&](const INDIVIDUAL& i) { return fitnessFunc(i); });
             return *std::max_element(values.cbegin(), values.cend());
         }
 
-        Rankings rankPopulation(const FitnessFunc& fitnessFunc) const {
+        template<typename F>
+        Rankings rankPopulation(const F& fitnessFunc) const {
             Rankings ranked;
             for(const auto& ind: _population) {
                 ranked.insert(std::make_pair(fitnessFunc(ind), std::cref(ind)));
@@ -69,7 +74,8 @@ template<class INDIVIDUAL = Individual<>>
     }
 
     template<class INDIVIDUAL>
-    const INDIVIDUAL& Algorithm<INDIVIDUAL>::run(double fitness, const FitnessFunc& fitnessFunc,
+    template<typename F>
+    const INDIVIDUAL& Algorithm<INDIVIDUAL>::run(double fitness, const F& fitnessFunc,
                                                  const SelectFunc& select,
                                                  const XoverFunc& xover, const MutateFunc& mutate) {
         int generation = 0;
@@ -95,7 +101,8 @@ template<class INDIVIDUAL = Individual<>>
     }
 
     template<class INDIVIDUAL>
-    const INDIVIDUAL& Algorithm<INDIVIDUAL>::run(double fitness, const FitnessFunc& fitnessFunc,
+    template<typename F>
+    const INDIVIDUAL& Algorithm<INDIVIDUAL>::run(double fitness, const F& fitnessFunc,
                                                  double mutateRate, double xoverRate) {
         return run(fitness, fitnessFunc, Tournament<INDIVIDUAL>(),
                    SinglePointCrossover<INDIVIDUAL>(xoverRate),
